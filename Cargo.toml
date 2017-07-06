@@ -1,0 +1,7 @@
+[package]
+name = "merit"
+version = "0.1.0"
+authors = ["Anthony Williams <hi@antw.io>"]
+
+[dependencies]
+rand = "*"
