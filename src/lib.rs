@@ -6,11 +6,13 @@ extern crate rand;
 mod calculate;
 mod participants;
 mod order;
+mod reserve;
 
 #[cfg(test)]
 mod tests {
     use super::order::Order;
     use super::participants::*;
+    use super::reserve::Reserve;
     use super::calculate::calculate;
 
     use test::Bencher;
@@ -41,6 +43,20 @@ mod tests {
             // use `test::black_box` to prevent compiler optimizations from
             // disregarding unused values
             ::test::black_box(calculate(&mut order));
+        });
+    }
+
+    #[bench]
+    fn bench_reserve(b: &mut Bencher) {
+        b.iter(|| {
+            let mut res = Reserve::new(10.0, Box::new(|_, _| 0.2));
+            res.set(0, 5.0);
+
+            for frame in 0..8760 {
+                ::test::black_box(res.add(frame, 1.2));
+                ::test::black_box(res.take(frame, 1.0));
+                ::test::black_box(res.at(frame));
+            }
         });
     }
 }
